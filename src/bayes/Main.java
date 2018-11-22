@@ -76,25 +76,27 @@ public class Main {
               * If no, set the vocab element to temp.
               * If yes, set the temp element sentiment counts to the new count, and set the vocab element to the word.
               */
-             /**
-              * TODO vocabulary.contains(temp) csak akkor igaz ha a sentiment count is stimmel!!
-              */
              int containsAt = -1;
              for (int k = 0; k < vocabulary.size(); k++){
-                 if (temp.word == vocabulary.get(k).word) containsAt = k;
+                 if (temp.word == vocabulary.get(k).word)
+                 {
+                     containsAt = k;
+                     System.out.print(k);
+                 }
+
              }
 
              if (containsAt >= 0) {
                  temp.negative_sentiment_count += (vocabulary.get(i).negative_sentiment_count - 1);
                  temp.positive_sentiment_count += (vocabulary.get(i).positive_sentiment_count - 1);
                  vocabulary.set(containsAt, temp);
-                 System.out.print("Sentiment count changed /t");
+                 System.out.print("Sentiment count changed \t");
              } else {
                  vocabulary.add(temp);
-                System.out.println("New item in vocab /t");
+                 System.out.print("new item,");
              }
          }
-         System.out.println("Stored sentence vocabized");
+           System.out.println("Stored sentence added to vocab");
      }
  }
 
