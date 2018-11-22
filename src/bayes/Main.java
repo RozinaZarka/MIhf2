@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args){
         readInput();
         makeVocab(data,vocabulary);
-        bayesAlgorithm(vocabulary);
+     //   bayesAlgorithm(vocabulary);
 
          /*
         for(int i = 0;i<n;i++){
@@ -62,40 +62,33 @@ public class Main {
      * @param vocabulary
      */
  public static void makeVocab (ArrayList<storedSentence> data, ArrayList<VocabElement> vocabulary){
-     VocabElement temp = new VocabElement();
 
-     for(int i = 0;i<n;i++){
-
-         for(int j = 0; j < data.get(i).splitted_data.length;j++){
-            // System.out.print(data.get(i).splitted_data[j]+' ');
-
+     for(int i = 0;i<n;i++) {
+         for (int j = 0; j < data.get(i).splitted_data.length; j++) {
+             // System.out.print(data.get(i).splitted_data[j]+' ');
+             VocabElement temp = new VocabElement();
              temp.word = data.get(i).splitted_data[j];
-             if (data.get(i).sentiment == 1){
+             if (data.get(i).sentiment == 1) {
                  temp.positive_sentiment_count += 1;
-             } else temp.negative_sentiment_count +=1;
+             } else temp.negative_sentiment_count += 1;
 
-    /** Find out if the word is already in the vocab or not.
-     * If no, set the vocab element to temp.
-     * If yes, set the temp element sentiment counts to the new count, and set the vocab element to the word.
-    */
-
-             if (!vocabulary.contains(temp)){
+             /** Find out if the word is already in the vocab or not.
+              * If no, set the vocab element to temp.
+              * If yes, set the temp element sentiment counts to the new count, and set the vocab element to the word.
+              */
+             if (vocabulary.contains(temp)) {
+                 int vocabLine = vocabulary.indexOf(temp);
+                 temp.negative_sentiment_count += (vocabulary.get(i).negative_sentiment_count - 1);
+                 temp.positive_sentiment_count += (vocabulary.get(i).positive_sentiment_count - 1);
+                 vocabulary.set(vocabLine, temp);
+                 System.out.println("Sentiment count changed for" + temp);
+             } else {
                  vocabulary.add(temp);
                  System.out.println("New item in vocab");
-             } else{
-                 int vocabLine = vocabulary.indexOf(temp);
-                 temp.negative_sentiment_count += ( vocabulary.get(i).negative_sentiment_count -1 );
-                 temp.positive_sentiment_count += ( vocabulary.get(i).positive_sentiment_count -1 );
-                 vocabulary.set(vocabLine,temp);
-                 System.out.println("Sentiment count changed for" + temp);
              }
-
-
          }
          System.out.println("Stored sentence vocabized");
-
      }
-
  }
 
     /**
