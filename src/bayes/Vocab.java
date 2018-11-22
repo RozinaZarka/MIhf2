@@ -1,9 +1,20 @@
 package bayes;
 
+import java.util.ArrayList;
+
 public class Vocab{
-    String word;
-    int positive_sentiment_count;
-    int negative_sentiment_count;
-    
-    
+
+    ArrayList<VocabElement> vocabElements = new ArrayList<>() ;
+
+    public VocabElement find( String word){
+
+        int i =0;
+        while ( i< vocabElements.size()){
+            if (vocabElements.get(i).word == word )
+                return vocabElements.get(i);
+            i++;
+        }
+        return new VocabElement();
+    }
+
 }
