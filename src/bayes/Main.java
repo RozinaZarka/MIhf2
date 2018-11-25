@@ -3,31 +3,24 @@ import java.util.*;
 import java.util.Scanner;
 
 public class Main {
-    static int n = 80000;
-    static int m = 20000;
-    static ArrayList<storedSentence> trainigdata = new ArrayList<storedSentence>();
-    static ArrayList<VocabElement> vocabulary= new ArrayList<VocabElement>();
-    static  ArrayList<String> wordsInVocab = new ArrayList<String>();
-    static ArrayList <storedSentence> testingdata = new ArrayList<storedSentence>();
+    private static int n = 80000;
+    private static int m = 20000;
+    private static ArrayList<storedSentence> trainingData = new ArrayList<>(n);
+    private static ArrayList<VocabElement> vocabulary= new ArrayList<>(13054);
+    private static  ArrayList<String> wordsInVocab = new ArrayList<>(13504);
+    private static ArrayList <storedSentence> testingData = new ArrayList<>(m);
 
     public static void main(String[] args){
         readInput();
-        makeVocab(trainigdata,vocabulary,wordsInVocab);
-     //   bayesAlgorithm(vocabulary);
-
-         /*
-        for(int i = 0;i<n;i++){
-            for(int b = 0;b < trainigdata.get(i).splitted_data.length;b++){
-                System.out.print(trainigdata.get(i).splitted_data[b]+' ');
-            }
-            System.out.print('\n');
-        }
-        */
+        makeVocab(trainingData,vocabulary,wordsInVocab);
+        bayesAlgorithm(vocabulary, testingData);
 
     }
 
-    // reading the input, and making a file of the lines
-    public static void readInput(){
+    /**
+     * Reading the input, and storing the lines.
+     */
+    private static void readInput(){
 
         Scanner s = new Scanner(System.in);
         String str1 ;
@@ -36,12 +29,12 @@ public class Main {
             storedSentence sen = new storedSentence();
             str1 =  s.nextLine();
             sen.base_sentence = str1;
-            trainigdata.add(sen);
+            trainingData.add(sen);
         }
 
         for(int i = 0;i<n;i++){
             str1 =  s.nextLine();
-            storedSentence j = trainigdata.get(i);
+            storedSentence j = trainingData.get(i);
             j.sentiment = Integer.parseInt(str1);
 
         }
@@ -50,14 +43,14 @@ public class Main {
             storedSentence sen = new storedSentence();
             str1 =  s.nextLine();
             sen.base_sentence = str1;
-            testingdata.add(sen);
+            testingData.add(sen);
         }
 
         for(int i = 0;i<n;i++){
-            trainigdata.get(i).split_data(",");
+            trainingData.get(i).split_data(",");
         }
         for(int i = 0;i<m;i++){
-            testingdata.get(i).split_data(",");
+            testingData.get(i).split_data(",");
         }
 
         s.close();
@@ -65,18 +58,18 @@ public class Main {
 
     /**
      * creates a vocabulary out of the original dataset
-     * @param tariningdata
-     * @param vocabulary
+     * @param trainingData the data on which the algorithm will base its guesses
+     * @param vocabulary the vocab that is to be filled
      */
- public static void makeVocab (ArrayList<storedSentence> tariningdata, ArrayList<VocabElement> vocabulary, ArrayList<String> wordsInVocab){
+ private static void makeVocab (ArrayList<storedSentence> trainingData, ArrayList<VocabElement> vocabulary, ArrayList<String> wordsInVocab){
 
      for(int i = 0;i<n;i++) {
-         for (int j = 0; j < tariningdata.get(i).splitted_data.length; j++) {
-             // System.out.print(trainigdata.get(i).splitted_data[j]+' ');
+         for (int j = 0; j < trainingData.get(i).splitted_data.length; j++) {
+             // System.out.print(trainingData.get(i).splitted_data[j]+' ');
              VocabElement temp = new VocabElement();
-             temp.word = tariningdata.get(i).splitted_data[j];
+             temp.word = trainingData.get(i).splitted_data[j];
              //System.out.println(temp.word);
-             if (tariningdata.get(i).sentiment == 1) {
+             if (trainingData.get(i).sentiment == 1) {
                  temp.positive_sentiment_count += 1;
              } else temp.negative_sentiment_count += 1;
 
@@ -85,38 +78,29 @@ public class Main {
               * If yes, set the temp element sentiment counts to the new count, and set the vocab element to the word.
               */
              int containsAt = wordsInVocab.indexOf(temp.word);
-            /* String thisString;
-             for (int k = 0; k < vocabulary.size(); k++){
-                 thisString = vocabulary.get(k).word;
-                 //System.out.print(thisString + " " + k +"\t");
-                 if (temp.word == thisString)
-                 {
-                     containsAt = k;
-                     i = vocabulary.size();
-                 }
-             } */
-
 
              if (containsAt >= 0) {
-                 temp.negative_sentiment_count += (vocabulary.get(i).negative_sentiment_count - 1);
-                 temp.positive_sentiment_count += (vocabulary.get(i).positive_sentiment_count - 1);
+                 temp.negative_sentiment_count += (vocabulary.get(containsAt).negative_sentiment_count - 1);
+                 temp.positive_sentiment_count += (vocabulary.get(containsAt).positive_sentiment_count - 1);
                  vocabulary.set(containsAt, temp);
-               //  System.out.print("Sentiment count changed \t");
+                 //System.out.print("Sentiment count changed \t");
              } else {
                  wordsInVocab.add(vocabulary.size(), temp.word);
                  vocabulary.add(vocabulary.size(),temp);
-                 /// System.out.print("new item,");
+                 // System.out.print("new item,");
              }
          }
-           System.out.println("Stored sentence added to vocab"+i);
+           System.out.println("Stored sentence added to vocab "+i);
      }
  }
 
     /**
-     * Evaluates the given trainigdata according to the Naive Bayes Algorithm
+     * Evaluates the given test data according to the Naive Bayes Algorithm
      * @param vocabulary the vocab
+     * @param  testingdata data to be evaluated
      */
- public static void bayesAlgorithm (ArrayList<VocabElement> vocabulary){
+ private static void bayesAlgorithm (ArrayList<VocabElement> vocabulary,ArrayList<storedSentence> testingdata){
 
  }
+
 }
