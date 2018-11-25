@@ -6,7 +6,7 @@ public class VocabElement {
     int negative_sentiment_count;
 
     public void VocabElement(String word, int positive, int negative ){
-        this.word =word;
+        this.word = word;
         this.positive_sentiment_count = positive;
         this.negative_sentiment_count = negative;
 
@@ -14,8 +14,8 @@ public class VocabElement {
 
     public void VocabElement(){
         this.word = "";
-        this.positive_sentiment_count = 1;
-        this.negative_sentiment_count = 1;
+        this.positive_sentiment_count = 0;
+        this.negative_sentiment_count = 0;
 
     }
 
