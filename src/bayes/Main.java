@@ -5,16 +5,15 @@ import java.util.Scanner;
 public class Main {
     private static int n = 80000;
     private static int m = 20000;
+    private static HashMap<String,VocabElement> vocabulary = new HashMap<>();
     private static ArrayList<storedSentence> trainingData = new ArrayList<>(n);
-    private static ArrayList<VocabElement> vocabulary= new ArrayList<>();
-    private static  ArrayList<String> wordsInVocab = new ArrayList<>();
     private static ArrayList <storedSentence> testingData = new ArrayList<>(m);
     private static int allPositive = 0;
     private static int allNegative = 0;
 
     public static void main(String[] args){
         readInput();
-        makeVocab(trainingData,vocabulary,wordsInVocab);
+        makeVocab(trainingData,vocabulary);
         bayesAlgorithm(vocabulary, testingData);
 
     }
@@ -63,84 +62,85 @@ public class Main {
      * @param trainingData the data on which the algorithm will base its guesses
      * @param vocabulary the vocab that is to be filled
      */
- private static void makeVocab (ArrayList<storedSentence> trainingData, ArrayList<VocabElement> vocabulary, ArrayList<String> wordsInVocab){
+ private static void makeVocab (ArrayList<storedSentence> trainingData, HashMap<String,VocabElement> vocabulary){
 
      for(int i = 0;i<n;i++) {
          for (int j = 0; j < trainingData.get(i).splitted_data.length; j++) {
-             // System.out.print(trainingData.get(i).splitted_data[j]+' ');
-             VocabElement temp = new VocabElement();
-             temp.word = trainingData.get(i).splitted_data[j];
-             //System.out.println(temp.word);
-             if (trainingData.get(i).sentiment == 1) {
-                 temp.positive_sentiment_count += 1;
-             } else temp.negative_sentiment_count += 1;
+
+             String  temp =  trainingData.get(i).splitted_data[j];;
+             int sentiment = trainingData.get(i).sentiment;
 
              /** Find out if the word is already in the vocab or not.
               * If no, set the vocab element to temp.
               * If yes, set the temp element sentiment counts to the new count, and set the vocab element to the word.
               */
-             int containsAt = wordsInVocab.indexOf(temp.word);
-
-             if (containsAt >= 0) {
-                 int vocabsentn = vocabulary.get(containsAt).negative_sentiment_count;
-                 int vocabsentp = vocabulary.get(containsAt).positive_sentiment_count;
 
 
-                 if (vocabsentn+temp.negative_sentiment_count > vocabsentp ) {
-                     allNegative++;
-                     allPositive--;
-                 } else if (vocabsentp+temp.positive_sentiment_count > vocabsentn ){
-                     allPositive++;
-                     allNegative--;
+             if (vocabulary.containsKey(temp)) {
+                 VocabElement tempvocabelement = vocabulary.get(temp);
+                 if (sentiment == 1) {
+                     if (tempvocabelement.negative_sentiment_count > tempvocabelement.positive_sentiment_count) {
+                         allNegative--;
+                         allPositive++;
+                         tempvocabelement.positive_sentiment_count++;
+                     }
+
+                 } else {
+
+                     if (tempvocabelement.positive_sentiment_count > tempvocabelement.negative_sentiment_count) {
+                         allNegative++;
+                         allPositive--;
+                         tempvocabelement.negative_sentiment_count++;
+                     }
+
                  }
-                 temp.negative_sentiment_count += vocabsentn;
-                 temp.positive_sentiment_count += vocabsentp;
-                 vocabulary.set(containsAt, temp);
-                 //System.out.print("Sentiment count changed \t");
+                 vocabulary.replace(temp,tempvocabelement);
+
              } else {
-                 wordsInVocab.add(vocabulary.size(), temp.word);
-                 vocabulary.add(vocabulary.size(),temp);
-                 // System.out.print("new item,");
-                 if ( temp.negative_sentiment_count > temp.positive_sentiment_count)
-                 {
-                     allPositive++;
-                 } else allNegative++;
+                 VocabElement tempvocabelement = new VocabElement();
+                 if (sentiment == 1) {
+                         allPositive++;
+                         tempvocabelement.positive_sentiment_count++;
+
+                 } else {
+                     allNegative++;
+                     tempvocabelement.negative_sentiment_count++;
+                 }
+                 vocabulary.put(temp,tempvocabelement);
+
              }
          }
-          // System.out.println("Stored sentence added to vocab "+i);
      }
+
  }
+
 
     /**
      * Evaluates the given test data according to the Naive Bayes Algorithm
      * @param vocabulary the vocab
      * @param  testingdata data to be evaluated
      */
- private static void bayesAlgorithm (ArrayList<VocabElement> vocabulary,ArrayList<storedSentence> testingdata){
+ private static void bayesAlgorithm (HashMap<String,VocabElement> vocabulary,ArrayList<storedSentence> testingdata){
 
      for ( int i = 0; i<m; i++ ){
-         float sumNegative = 0;
-         float sumPositive = 0;
+
 
          for ( int j = 0; j<testingdata.get(i).splitted_data.length; j++) {
 
              String word = testingdata.get(i).splitted_data[j];
-             int containsAt = wordsInVocab.indexOf(word);
-             if ( containsAt >= 0) {
 
-                 int thispositive = vocabulary.get(containsAt).positive_sentiment_count;
-                 int thisnegative = vocabulary.get(containsAt).negative_sentiment_count;
+             if ( vocabulary.containsKey(word)) {
 
-                 sumPositive += (thispositive+1) / (vocabulary.size()+ allPositive);
-                 sumNegative += (thisnegative+1) / (vocabulary.size() + allNegative);
+
+
+
+             } else {
 
              }
 
 
          }
-         if (sumNegative < sumPositive)
-             System.out.println("1");
-         else System.out.println("0");
+
 
      }
  }
