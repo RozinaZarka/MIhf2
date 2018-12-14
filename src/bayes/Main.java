@@ -2,9 +2,10 @@ package bayes;
 import java.util.*;
 import java.util.Scanner;
 
+
 public class Main {
-    private static int n = 80000;
-    private static int m = 20000;
+    private static int n = 128000;
+    private static int m = 32000;
     private static HashMap<String, SentimentElement> vocabulary = new HashMap<>();
     private static ArrayList<storedSentence> trainingData = new ArrayList<>(n);
     private static ArrayList <storedSentence> testingData = new ArrayList<>(m);
@@ -14,7 +15,8 @@ public class Main {
     public static void main(String[] args){
         readInput();
         makeVocab(trainingData,vocabulary);
-        bayesAlgorithm(vocabulary, testingData);
+       bayesAlgorithm(vocabulary, testingData);
+
 
     }
 
@@ -91,12 +93,12 @@ public class Main {
                          allNegative++;
                          tempvocabelement.negative_sentiment_count++;
                      }
-
+                     vocabulary.replace(tempString,tempvocabelement);
                  }
-                 vocabulary.replace(tempString,tempvocabelement);
+                 
 
-             } else {
-                 SentimentElement tempvocabelement = new SentimentElement();
+             else {
+                 
                  if (sentiment == 1) {
                          allPositive++;
                          tempvocabelement.positive_sentiment_count++;
@@ -105,10 +107,10 @@ public class Main {
                      allNegative++;
                      tempvocabelement.negative_sentiment_count++;
                  }
-
+                 vocabulary.put(tempString,tempvocabelement);
 
              }
-             vocabulary.put(tempString,tempvocabelement);
+             
          }
      }
 
@@ -123,26 +125,44 @@ public class Main {
  private static void bayesAlgorithm (HashMap<String, SentimentElement> vocabulary, ArrayList<storedSentence> testingdata){
 
      for ( int i = 0; i<m; i++ ){
-
+        double PositivePossibility = 1;
+        double NegativePossibility= 1;
 
          for ( int j = 0; j<testingdata.get(i).splitted_data.length; j++) {
 
              String word = testingdata.get(i).splitted_data[j];
 
              if ( vocabulary.containsKey(word)) {
+                SentimentElement current_sentiments = vocabulary.get(word);
+                PositivePossibility *= Double.valueOf((current_sentiments.positive_sentiment_count + 1)) / Double.valueOf((allPositive + vocabulary.size()));
+                NegativePossibility *= Double.valueOf((current_sentiments.negative_sentiment_count + 1)) / Double.valueOf((allPositive + vocabulary.size()));
+                // System.out.println(current_sentiments.positive_sentiment_count);
+                // System.out.println(allPositive);
+                // System.out.println(vocabulary.size());
+                // System.out.println(current_sentiments.negative_sentiment_count);
+                // System.out.println(allNegative);
+                // System.out.println(vocabulary.size());
+                // System.out.println(PositivePossibility);
+                // System.out.println(NegativePossibility);
 
-
-
-
-             } else {
-
-             }
+             } 
 
 
          }
+         if(PositivePossibility< NegativePossibility){
+            // System.out.println(PositivePossibility);
+            System.out.println("0");
+         }
+         else{
+            // System.out.println(NegativePossibility);
+            System.out.println("1");
+         }
+
+         
 
 
      }
  }
-
 }
+
+
