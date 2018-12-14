@@ -1,6 +1,6 @@
 package bayes;
 
-public class VocabElement {
+public class SentimentElement {
     int positive_sentiment_count;
     int negative_sentiment_count;
 

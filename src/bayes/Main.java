@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     private static int n = 80000;
     private static int m = 20000;
-    private static HashMap<String,VocabElement> vocabulary = new HashMap<>();
+    private static HashMap<String, SentimentElement> vocabulary = new HashMap<>();
     private static ArrayList<storedSentence> trainingData = new ArrayList<>(n);
     private static ArrayList <storedSentence> testingData = new ArrayList<>(m);
     private static int allPositive = 0;
@@ -62,12 +62,12 @@ public class Main {
      * @param trainingData the data on which the algorithm will base its guesses
      * @param vocabulary the vocab that is to be filled
      */
- private static void makeVocab (ArrayList<storedSentence> trainingData, HashMap<String,VocabElement> vocabulary){
+ private static void makeVocab (ArrayList<storedSentence> trainingData, HashMap<String, SentimentElement> vocabulary){
 
      for(int i = 0;i<n;i++) {
          for (int j = 0; j < trainingData.get(i).splitted_data.length; j++) {
 
-             String  temp =  trainingData.get(i).splitted_data[j];;
+             String  tempString =  trainingData.get(i).splitted_data[j];;
              int sentiment = trainingData.get(i).sentiment;
 
              /** Find out if the word is already in the vocab or not.
@@ -75,29 +75,28 @@ public class Main {
               * If yes, set the temp element sentiment counts to the new count, and set the vocab element to the word.
               */
 
+             SentimentElement tempvocabelement = new SentimentElement();
+             if (vocabulary.containsKey(tempString)) {
 
-             if (vocabulary.containsKey(temp)) {
-                 VocabElement tempvocabelement = vocabulary.get(temp);
+                 tempvocabelement = vocabulary.get(tempString);
                  if (sentiment == 1) {
-                     if (tempvocabelement.negative_sentiment_count > tempvocabelement.positive_sentiment_count) {
-                         allNegative--;
+
+
                          allPositive++;
                          tempvocabelement.positive_sentiment_count++;
-                     }
+
 
                  } else {
 
-                     if (tempvocabelement.positive_sentiment_count > tempvocabelement.negative_sentiment_count) {
                          allNegative++;
-                         allPositive--;
                          tempvocabelement.negative_sentiment_count++;
                      }
 
                  }
-                 vocabulary.replace(temp,tempvocabelement);
+                 vocabulary.replace(tempString,tempvocabelement);
 
              } else {
-                 VocabElement tempvocabelement = new VocabElement();
+                 SentimentElement tempvocabelement = new SentimentElement();
                  if (sentiment == 1) {
                          allPositive++;
                          tempvocabelement.positive_sentiment_count++;
@@ -106,9 +105,10 @@ public class Main {
                      allNegative++;
                      tempvocabelement.negative_sentiment_count++;
                  }
-                 vocabulary.put(temp,tempvocabelement);
+
 
              }
+             vocabulary.put(tempString,tempvocabelement);
          }
      }
 
@@ -120,7 +120,7 @@ public class Main {
      * @param vocabulary the vocab
      * @param  testingdata data to be evaluated
      */
- private static void bayesAlgorithm (HashMap<String,VocabElement> vocabulary,ArrayList<storedSentence> testingdata){
+ private static void bayesAlgorithm (HashMap<String, SentimentElement> vocabulary, ArrayList<storedSentence> testingdata){
 
      for ( int i = 0; i<m; i++ ){
 
