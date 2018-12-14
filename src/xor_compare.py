@@ -1,6 +1,6 @@
 import csv 
 
-ans_expected =  open('bayes/ans.csv', newline='\n')
+ans_expected =  open('/home/gabor/Development/Mi_bme/rovid/ans.csv', newline='\n')
 ans_got =  open('anstrue.csv', newline='\n')
 
 expected_reader = csv.reader(ans_expected, delimiter='\n')

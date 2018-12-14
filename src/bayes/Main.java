@@ -126,8 +126,8 @@ public class Main {
         // System.out.println(vocabulary.get("").positive_sentiment_count);
         // System.out.println(vocabulary.get("").negative_sentiment_count);
      for ( int i = 0; i<m; i++ ){
-        double PositivePossibility = 1.7;
-        double NegativePossibility= 1.5;
+        double PositivePossibility =Double.valueOf(allPositive)/Double.valueOf(allPositive + allNegative);
+        double NegativePossibility= Double.valueOf(allNegative)/Double.valueOf(allPositive + allNegative);
 
          for ( int j = 0; j<testingdata.get(i).splitted_data.length; j++) {
 
@@ -135,13 +135,13 @@ public class Main {
 
              if ( vocabulary.containsKey(word)) {
                 SentimentElement current_sentiments = vocabulary.get(word);
-                if(PositivePossibility > 1.0 && NegativePossibility > 1.0){
-                    PositivePossibility = Double.valueOf((current_sentiments.positive_sentiment_count + 1)) / Double.valueOf((allPositive + vocabulary.size()));
-                    NegativePossibility = Double.valueOf((current_sentiments.negative_sentiment_count + 1)) /Double.valueOf((allPositive + vocabulary.size()));
-                }
+                // if(PositivePossibility > 1.0 && NegativePossibility > 1.0){
+                //     PositivePossibility = .valueOf((current_sentiments.positive_sentiment_count + 1)) / Double.valueOf((allPositive + vocabulary.size()));
+                //     NegativePossibility = Double.valueOf((current_sentiments.negative_sentiment_count + 1)) /Double.valueOf((allPositive + vocabulary.size()));
+                // }
                 
                 PositivePossibility *= Double.valueOf((current_sentiments.positive_sentiment_count + 1)) / Double.valueOf((allPositive + vocabulary.size()));
-                NegativePossibility *= Double.valueOf((current_sentiments.negative_sentiment_count + 1)) /Double.valueOf((allPositive + vocabulary.size()));
+                NegativePossibility *= Double.valueOf((current_sentiments.negative_sentiment_count + 1)) /Double.valueOf((allNegative+ vocabulary.size()));
                 // System.out.println(current_sentiments.positive_sentiment_count);
                 // System.out.println(allPositive);
                 // System.out.println(vocabulary.size());
@@ -169,6 +169,6 @@ public class Main {
 
      }
  }
+
+
 }
-
-
