@@ -142,6 +142,14 @@ public class Main {
                 
                 PositivePossibility *= Double.valueOf((current_sentiments.positive_sentiment_count + 1)) / Double.valueOf((allPositive + vocabulary.size()));
                 NegativePossibility *= Double.valueOf((current_sentiments.negative_sentiment_count + 1)) /Double.valueOf((allNegative+ vocabulary.size()));
+                
+                // PositivePossibility *= Double.valueOf((current_sentiments.positive_sentiment_count + 1)) / Double.valueOf((current_sentiments.negative_sentiment_count+current_sentiments.positive_sentiment_count));
+                // NegativePossibility *= Double.valueOf((current_sentiments.negative_sentiment_count + 1)) / Double.valueOf((current_sentiments.negative_sentiment_count+current_sentiments.positive_sentiment_count));
+       
+                // PositivePossibility *= Double.valueOf((current_sentiments.positive_sentiment_count + 1)*allPositive) / Double.valueOf((current_sentiments.negative_sentiment_count+current_sentiments.positive_sentiment_count))* Double.valueOf((current_sentiments.negative_sentiment_count+current_sentiments.positive_sentiment_count));
+                // NegativePossibility *= Double.valueOf((current_sentiments.negative_sentiment_count + 1)*allNegative) / Double.valueOf((current_sentiments.negative_sentiment_count+current_sentiments.positive_sentiment_count))* Double.valueOf((current_sentiments.negative_sentiment_count+current_sentiments.positive_sentiment_count));
+
+
                 // System.out.println(current_sentiments.positive_sentiment_count);
                 // System.out.println(allPositive);
                 // System.out.println(vocabulary.size());
